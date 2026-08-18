@@ -1,0 +1,22 @@
+{
+  "_purpose": "LOCAL SMOKE TEST ONLY - proves the SAWS-temperature LiteSTGNN pipeline runs end-to-end. Not a scientific configuration: lookback/horizon/hyperparameters here are cheap placeholders, not the final A100 experiment protocol.",
+  "run_label": "SMOKE_TEST_NON_FINAL",
+  "variable": "Temperature",
+  "seq_len": 24,
+  "pred_len": 6,
+  "max_timesteps_per_split": 2000,
+  "batch_size": 8,
+  "max_epochs": 3,
+  "max_train_batches": 5,
+  "max_val_batches": 2,
+  "learning_rate": 0.001,
+  "adj_rank": 8,
+  "adj_topk": 5,
+  "adj_tau": 1.2,
+  "self_loop_alpha": 0.2,
+  "gate_mode": "band",
+  "eval_horizons": [6],
+  "mape_exclude_abs_below": 1.0,
+  "vpt_epsilon": null,
+  "seed": 0
+}

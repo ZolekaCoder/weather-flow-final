@@ -1,0 +1,15 @@
+{
+  "variable": "temperature_c",
+  "seq_len": 24,
+  "pred_len": 6,
+  "spatial_stride": 4,
+  "batch_size": 16,
+  "epochs": 20,
+  "learning_rate": 0.001,
+  "adj_rank": 16,
+  "adj_topk": 10,
+  "adj_tau": 1.2,
+  "self_loop_alpha": 0.2,
+  "gate_mode": "band",
+  "demo_n_nodes": 252
+}

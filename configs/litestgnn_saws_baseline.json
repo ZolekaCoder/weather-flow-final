@@ -1,0 +1,21 @@
+{
+  "_purpose": "First real A100-ready baseline: LiteSTGNN, SAWS Temperature, 96h in -> 48h out, per-station train-only normalization, native learned LowRank-TopK graph, flat gating. Full dataset (no truncation/batch caps) - intended for Colab/A100, not a local full run.",
+  "run_label": "BASELINE_VALIDATION_RESULT",
+  "variable": "Temperature",
+  "seq_len": 96,
+  "pred_len": 48,
+  "batch_size": 64,
+  "max_epochs": 100,
+  "early_stopping_patience": 10,
+  "learning_rate": 0.001,
+  "adj_rank": 16,
+  "adj_topk": 10,
+  "adj_tau": 1.2,
+  "self_loop_alpha": 0.2,
+  "gate_mode": "flat",
+  "prop_orders": 2,
+  "eval_horizons": [6, 12, 24, 48],
+  "mape_exclude_abs_below": 1.0,
+  "vpt_epsilon": 1.0,
+  "seed": 42
+}

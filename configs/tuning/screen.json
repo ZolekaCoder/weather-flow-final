@@ -1,0 +1,20 @@
+{
+  "_purpose": "Stage 1 controlled Temperature screening sweep: one architectural factor changed at a time from the corrected baseline (rank=16, topk=10, tau=1.2, prop_orders=2, self_loop_alpha=0.2, gate_mode=flat, full beta-scaled gate). Plus a DLinear-only control. Edit this file to add/change experiments - no Python changes needed for cross_variable/multiseed/lr stages, which look up a candidate's overrides by id from here.",
+  "base_config": "configs/litestgnn_saws_baseline.json",
+  "variables": ["Temperature"],
+  "seeds": [42],
+  "experiments": [
+    {"id": "B0", "overrides": {}, "note": "corrected baseline, unchanged"},
+    {"id": "R4", "overrides": {"adj_rank": 4}},
+    {"id": "R8", "overrides": {"adj_rank": 8}},
+    {"id": "K3", "overrides": {"adj_topk": 3}},
+    {"id": "K5", "overrides": {"adj_topk": 5}},
+    {"id": "K15", "overrides": {"adj_topk": 15}},
+    {"id": "T08", "overrides": {"adj_tau": 0.8}},
+    {"id": "T10", "overrides": {"adj_tau": 1.0}},
+    {"id": "P1", "overrides": {"prop_orders": 1}},
+    {"id": "P3", "overrides": {"prop_orders": 3}},
+    {"id": "A0", "overrides": {"self_loop_alpha": 0.0}},
+    {"id": "DLINEAR", "overrides": {"use_spatial_module": false}, "note": "temporal-only ablation control - not a replacement architecture"}
+  ]
+}

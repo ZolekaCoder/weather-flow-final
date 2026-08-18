@@ -1,0 +1,20 @@
+{
+  "variable": "temperature_c",
+  "seq_len": 24,
+  "pred_len": 6,
+  "spatial_stride": 16,
+  "demo_years": [2011],
+  "train_frac": 0.7,
+  "val_frac": 0.15,
+  "batch_size": 8,
+  "epochs": 1,
+  "max_train_batches": 5,
+  "max_val_batches": 2,
+  "max_test_batches": 2,
+  "learning_rate": 0.001,
+  "adj_rank": 8,
+  "adj_topk": 5,
+  "adj_tau": 1.2,
+  "self_loop_alpha": 0.2,
+  "gate_mode": "band"
+}
