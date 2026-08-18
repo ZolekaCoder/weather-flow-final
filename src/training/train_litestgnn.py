@@ -214,11 +214,15 @@ def compute_phase1_metrics(true_real, pred_real, mask_np, scaler, config):
     }
 
 
-def save_predictions(run_dir, station_order, true_real, pred_real, mask_np, max_samples=3, max_stations=5):
-    """Full validation predictions/truth/mask (compressed npz, not
-    truncated) plus a small human-readable CSV sample for quick inspection.
+def save_predictions(run_dir, station_order, true_real, pred_real, mask_np, max_samples=3, max_stations=5, filename_prefix="validation"):
+    """Full predictions/truth/mask (compressed npz, not truncated) plus a
+    small human-readable CSV sample for quick inspection. filename_prefix
+    defaults to "validation" so every existing caller (single-run training,
+    the tuning runner) keeps producing byte-identical filenames; the final
+    test-set evaluator passes filename_prefix="test" so its output can never
+    be mistaken for a validation artifact.
     """
-    full_path = run_dir / "predictions" / "validation_predictions_full.npz"
+    full_path = run_dir / "predictions" / f"{filename_prefix}_predictions_full.npz"
     np.savez_compressed(
         full_path,
         y_true=true_real,
@@ -241,7 +245,7 @@ def save_predictions(run_dir, station_order, true_real, pred_real, mask_np, max_
                     "y_pred_physical": float(pred_real[sample, h, n]),
                     "originally_observed": bool(mask_np[sample, h, n]),
                 })
-    sample_path = run_dir / "predictions" / "validation_predictions_sample.csv"
+    sample_path = run_dir / "predictions" / f"{filename_prefix}_predictions_sample.csv"
     pd.DataFrame(rows).to_csv(sample_path, index=False)
     return sample_path, full_path
 
