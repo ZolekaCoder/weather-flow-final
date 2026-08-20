@@ -85,6 +85,51 @@ class PerStationScaler:
         }
 
 
+def _haversine_km(lat1, lon1, lat2, lon2):
+    """Great-circle distance in km between arrays of lat/lon points (degrees)."""
+    r_earth_km = 6371.0
+    lat1, lon1, lat2, lon2 = map(np.radians, (lat1, lon1, lat2, lon2))
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
+    return 2 * r_earth_km * np.arcsin(np.sqrt(a))
+
+
+def build_distance_adjacency(station_order, epsilon=0.1):
+    """Fixed physical-distance adjacency for the 30 SAWS stations, in the
+    style used across the DCRNN/Graph WaveNet/STGCN family for sensor
+    networks without a road-network graph: a Gaussian kernel on great-circle
+    distance, A_ij = exp(-dist_ij^2 / sigma^2) with sigma = std of all
+    pairwise distances (the standard convention from Li et al. 2018 DCRNN),
+    thresholded at `epsilon` and with self-loops on the diagonal.
+
+    Needed because STLGRU (unlike LiteSTGNN's learned low-rank adjacency)
+    takes a fixed external graph as a constructor argument - there is no
+    pre-existing SAWS graph in this dataset, so this derives one from the
+    station coordinates already in stations.csv. Fully deterministic given
+    `station_order` - safe to reconstruct identically at evaluation time
+    without needing to serialize it inside a model checkpoint.
+
+    Returns a [n_nodes, n_nodes] float32 numpy array.
+    """
+    stations = pd.read_csv(SAWS_DIR / "stations.csv").set_index("climate_number")
+    stations = stations.loc[station_order]
+    lat = stations["latitude"].to_numpy(dtype=np.float64)
+    lon = stations["longitude"].to_numpy(dtype=np.float64)
+
+    n = len(station_order)
+    dist = np.zeros((n, n), dtype=np.float64)
+    for i in range(n):
+        dist[i] = _haversine_km(lat[i], lon[i], lat, lon)
+
+    off_diag = dist[~np.eye(n, dtype=bool)]
+    sigma = off_diag.std()
+    adjacency = np.exp(-(dist ** 2) / (sigma ** 2))
+    adjacency[adjacency < epsilon] = 0.0
+    np.fill_diagonal(adjacency, 1.0)
+    return adjacency.astype(np.float32)
+
+
 def list_saws_variables():
     """Sorted list of variable names present in the SAWS imputed array,
     derived from the file's own keys (each "{climate_number}|{variable}")

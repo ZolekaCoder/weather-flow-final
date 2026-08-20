@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 import yaml
-from layer import STGRU
+from src.models.STLGRU.layer import STGRU
 import pdb
-from Normalize import Switch_Norm_2D
+from src.models.STLGRU.Normalize import Switch_Norm_2D
 
 class model(nn.Module):
     def __init__(self,arg,A):

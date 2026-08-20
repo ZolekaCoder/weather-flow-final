@@ -4,7 +4,7 @@ from torch import Tensor
 import math,pdb
 import torch.nn.functional as F
 
-from modules import gcn_glu,GRUcell
+from src.models.STLGRU.modules import gcn_glu,GRUcell
 
 class STGRU(nn.Module):
 
@@ -30,7 +30,12 @@ class STGRU(nn.Module):
 
         self.ap =nn.AvgPool1d(kernel_size=2)
 
-        self.linap =nn.Linear(32, gcn_in_channel)
+        # Original official code hardcoded nn.Linear(32, gcn_in_channel): AvgPool1d(kernel_size=2)
+        # halves the last (channel) dim, so 32 only happens to be correct when
+        # gcn_in_channel==64 (the traffic-dataset default n_hid). Made this dynamic
+        # so other n_hid values (e.g. a smaller SAWS hidden size) don't silently
+        # break with a shape mismatch; behavior is unchanged whenever n_hid==64.
+        self.linap =nn.Linear(gcn_in_channel // 2, gcn_in_channel)
 
         self.GRU = GRUcell(gcn_in_channel, gcn_in_channel)
 

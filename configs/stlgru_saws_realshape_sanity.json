@@ -1,0 +1,22 @@
+{
+  "_purpose": "LOCAL SANITY CHECK ONLY - exercises the exact real-baseline STLGRU code path (96h in / 48h out, per-station scaler, official STLGRU architecture, fixed distance adjacency) but on a small truncated/capped slice so it runs quickly on CPU/MPS. Not a scientific result - see configs/stlgru_saws_baseline.json for the real protocol.",
+  "run_label": "STLGRU_REALSHAPE_SANITY_NON_FINAL",
+  "variable": "Temperature",
+  "seq_len": 96,
+  "pred_len": 48,
+  "max_timesteps_per_split": 3000,
+  "batch_size": 64,
+  "max_epochs": 2,
+  "early_stopping_patience": 10,
+  "max_train_batches": 4,
+  "max_val_batches": 2,
+  "learning_rate": 0.001,
+  "n_hid": 64,
+  "input_dim": 1,
+  "dropout": 0.3,
+  "adjacency_epsilon": 0.1,
+  "eval_horizons": [6, 12, 24, 48],
+  "mape_exclude_abs_below": 1.0,
+  "vpt_epsilon": 1.0,
+  "seed": 42
+}

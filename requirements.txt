@@ -5,3 +5,4 @@ scipy
 cdsapi
 xarray
 netCDF4
+pyyaml
